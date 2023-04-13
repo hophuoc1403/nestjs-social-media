@@ -8,3 +8,5 @@ export interface User {
   occupation: string;
   picturePath: string;
 }
+
+export type UserOptional = Partial<User>;

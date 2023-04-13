@@ -8,9 +8,9 @@ export class UserFriendEntity {
 
   @ManyToOne(() => UserEntity, (user) => user.id)
   @JoinColumn()
-  userId: UserEntity;
+  user: UserEntity;
 
   @ManyToOne(() => UserEntity, (user) => user.id)
   @JoinColumn()
-  friendId: UserEntity;
+  friend: UserEntity;
 }
