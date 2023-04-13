@@ -1,17 +1,16 @@
 import { Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { UserEntity } from './User.entity';
-import { PostEntity } from './Post.entity';
 
-@Entity({ name: 'likes' })
-export class LikeEntity {
+@Entity('userFriend')
+export class UserFriendEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => UserEntity)
+  @ManyToOne(() => UserEntity, (user) => user.id)
   @JoinColumn()
   userId: UserEntity;
 
-  @ManyToOne(() => PostEntity)
+  @ManyToOne(() => UserEntity, (user) => user.id)
   @JoinColumn()
-  postId: PostEntity;
+  friendId: UserEntity;
 }

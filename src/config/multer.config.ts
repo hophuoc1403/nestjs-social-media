@@ -17,9 +17,8 @@ export const fileFilter = (req, file, callback) => {
 
 export const storage = diskStorage({
   destination: './uploads',
-  filename: (req, file, callback) => {
-    const name = file.originalname.split('.')[0];
-    const fileExtName = extname(file.originalname);
-    callback(null, `${name}-${Date.now()}${fileExtName}`);
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+    cb(null, uniqueSuffix + '-' + file.originalname);
   },
 });

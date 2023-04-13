@@ -1,28 +1,44 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { PostEntity } from './Post.entity';
 
 @Entity({ name: 'users' })
-export class UserModule {
+export class UserEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column({ nullable: false })
-  firstName;
+  firstName: string;
 
   @Column({ nullable: false })
-  lastName;
+  lastName: string;
 
   @Column({ nullable: false })
-  location;
+  location: string;
 
   @Column({ nullable: false })
-  occupation;
+  occupation: string;
 
   @Column({ nullable: false })
-  picturePath;
+  picturePath: string;
 
   @Column({ default: 0 })
   viewedProfile: number;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
+
+  @Column({ nullable: false })
+  email: string;
+
+  @Column({ nullable: false })
+  password: string;
+
+  @Column({ nullable: false })
+  role: string;
+
+  @OneToMany(() => PostEntity, (post) => post.userId)
+  post: PostEntity;
+
+  @OneToMany(() => PostEntity, (post) => post.userIdRoot)
+  postRoot: PostEntity;
 }
