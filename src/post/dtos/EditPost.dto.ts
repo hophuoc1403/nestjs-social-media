@@ -4,4 +4,6 @@ export class EditPostDto {
   @IsNotEmpty()
   @IsString()
   description: string;
+
+  picturePath?: string;
 }
