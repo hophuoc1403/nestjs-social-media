@@ -15,6 +15,8 @@ import { UserFriendEntity } from './database/UserFriend.entity';
 import { ServeStaticModule } from '@nestjs/serve-static/dist/serve-static.module';
 import { join } from 'path';
 import { PostModule } from './post/post.module';
+import { TagEntity } from './database/Tag.entity';
+import { PostTagEntity } from './database/PostTag.entity';
 
 @Module({
   imports: [
@@ -26,6 +28,8 @@ import { PostModule } from './post/post.module';
       password: '',
       database: 'social-media',
       entities: [
+        TagEntity,
+        PostTagEntity,
         UserEntity,
         PostEntity,
         CommentEntity,
@@ -40,6 +44,8 @@ import { PostModule } from './post/post.module';
     AuthModule,
     LikeEntity,
     UserFriendEntity,
+    TagEntity,
+    PostTagEntity,
     MulterModule.register({
       storage,
       fileFilter,

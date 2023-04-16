@@ -8,6 +8,8 @@ import { LikeEntity } from '../database/Like.entity';
 import { UserEntity } from '../database/User.entity';
 import { AuthGuard } from '../strategy/login.strategy';
 import { JwtService } from '@nestjs/jwt';
+import { PostTagEntity } from '../database/PostTag.entity';
+import { TagEntity } from '../database/Tag.entity';
 
 @Module({
   imports: [
@@ -16,6 +18,8 @@ import { JwtService } from '@nestjs/jwt';
       CommentEntity,
       LikeEntity,
       UserEntity,
+      PostTagEntity,
+      TagEntity,
     ]),
   ],
   controllers: [PostController],
