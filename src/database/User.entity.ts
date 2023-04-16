@@ -36,9 +36,9 @@ export class UserEntity {
   @Column({ nullable: false })
   role: string;
 
-  @OneToMany(() => PostEntity, (post) => post.userId)
+  @OneToMany(() => PostEntity, (post) => post.user)
   post: PostEntity;
 
-  @OneToMany(() => PostEntity, (post) => post.userIdRoot)
+  @OneToMany(() => PostEntity, (post) => post.userRoot)
   postRoot: PostEntity;
 }

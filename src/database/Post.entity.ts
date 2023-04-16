@@ -16,9 +16,6 @@ export class PostEntity {
   id: number;
 
   @Column({ nullable: false })
-  title: string;
-
-  @Column()
   description: string;
 
   @Column()
@@ -27,19 +24,19 @@ export class PostEntity {
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 
-  @Column()
+  @Column({ nullable: true })
   createdAtRoot: Date;
 
   @Column()
-  shareContent: string;
+  sharedContent: string;
 
   @ManyToOne(() => UserEntity)
   @JoinColumn()
-  userId: UserEntity;
+  user: UserEntity;
 
   @ManyToOne(() => UserEntity)
   @JoinColumn()
-  userIdRoot: UserEntity;
+  userRoot: UserEntity;
 
   @OneToMany(() => LikeEntity, (like) => like.postId)
   likes: LikeEntity;
