@@ -21,6 +21,7 @@ import { storage } from '../config/multer.config';
 import { AuthGuard } from '../strategy/login.strategy';
 import { EditPostDto } from './dtos/EditPost.dto';
 import { AddPostParams } from './@types/post.params';
+import { SharePostDto } from './dtos/SharePost.dto';
 
 @UseGuards(AuthGuard)
 @Controller('api/post')
@@ -76,5 +77,11 @@ export class PostController {
       payload.postInfo.picturePath = picturePath.filename;
     }
     return this.postService.editPost(payload);
+  }
+
+  @UsePipes(new ValidationPipe())
+  @Post('share')
+  async sharePost(@Body() postInfo: SharePostDto, @Req() req) {
+    return this.postService.sharePost({ postInfo, userId: req.user.id });
   }
 }

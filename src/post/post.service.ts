@@ -9,6 +9,7 @@ import fs from 'fs';
 import { AddPostParams, EditPostParams } from './@types/post.params';
 import { PostTagEntity } from '../database/PostTag.entity';
 import { TagEntity } from '../database/Tag.entity';
+import { SharePostDto } from './dtos/SharePost.dto';
 
 @Injectable()
 export class PostService {
@@ -48,14 +49,12 @@ export class PostService {
       }),
     );
 
-    const TagsOfPost = await this.tagRepository
+    newPost.tags = await this.tagRepository
       .createQueryBuilder('tag')
       .innerJoin('post_tag', 'pt', 'tag.id = pt.tag')
       .innerJoin('posts', 'p', 'p.id = pt.post')
       .where('p.id = :postId', { postId: newPost.id })
       .getMany();
-
-    newPost.tags = TagsOfPost;
 
     return { post: newPost };
   }
@@ -80,5 +79,27 @@ export class PostService {
     return { message: 'update post success !' };
   }
 
-  // async sharePost({});
+  async sharePost({
+    postInfo,
+    userId,
+  }: {
+    postInfo: SharePostDto;
+    userId: number;
+  }) {
+    const currentPost = await this.postRepository.findOne({
+      where: { id: postInfo.postId },
+    });
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+    const newSharePost = await this.postRepository.save({
+      userRoot: currentPost.user,
+      ...currentPost,
+      description: postInfo.description,
+      sharedContent: currentPost.description,
+      user,
+      createdAtRoot: currentPost.createdAt,
+      createdAt: new Date(),
+    });
+
+    return { post: newSharePost };
+  }
 }
