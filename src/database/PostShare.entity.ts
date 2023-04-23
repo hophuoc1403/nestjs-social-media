@@ -3,10 +3,12 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { UserEntity } from './User.entity';
 import { PostEntity } from './Post.entity';
+import { CommentEntity } from './Comment.entity';
 
 @Entity({ name: 'post_share' })
 export class PostShareEntity {
@@ -26,4 +28,7 @@ export class PostShareEntity {
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
+
+  @OneToMany(() => CommentEntity, (comment) => comment.sharePost)
+  sharePostComment: CommentEntity[];
 }

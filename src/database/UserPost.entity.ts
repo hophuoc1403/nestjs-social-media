@@ -9,6 +9,7 @@ import {
 import { UserEntity } from './User.entity';
 import { PostEntity } from './Post.entity';
 import { SavedPostEntity } from './SavedPost.entity';
+import { CommentEntity } from './Comment.entity';
 
 @Entity({ name: 'user_post' })
 export class UserPostEntity {
@@ -28,4 +29,7 @@ export class UserPostEntity {
 
   @OneToMany(() => SavedPostEntity, (savedPost) => savedPost.userPost)
   savedPost: SavedPostEntity[];
+
+  @OneToMany(() => CommentEntity, (comment) => comment.Post)
+  postComment: CommentEntity[];
 }

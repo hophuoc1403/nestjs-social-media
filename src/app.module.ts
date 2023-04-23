@@ -14,6 +14,7 @@ import { UserPostEntity } from './database/UserPost.entity';
 import { PostEntity } from './database/Post.entity';
 import { PostShareEntity } from './database/PostShare.entity';
 import { SavedPostEntity } from './database/SavedPost.entity';
+import { CommentEntity } from './database/Comment.entity';
 // import { PostModule } from './post/post.module';
 
 @Module({
@@ -31,6 +32,7 @@ import { SavedPostEntity } from './database/SavedPost.entity';
         UserPostEntity,
         PostShareEntity,
         SavedPostEntity,
+        CommentEntity,
       ],
       synchronize: true,
     }),
@@ -39,6 +41,7 @@ import { SavedPostEntity } from './database/SavedPost.entity';
     UserPostEntity,
     PostShareEntity,
     SavedPostEntity,
+    CommentEntity,
     // AuthModule,
     MulterModule.register({
       storage,
