@@ -13,6 +13,7 @@ import { join } from 'path';
 import { UserPostEntity } from './database/UserPost.entity';
 import { PostEntity } from './database/Post.entity';
 import { PostShareEntity } from './database/PostShare.entity';
+import { SavedPostEntity } from './database/SavedPost.entity';
 // import { PostModule } from './post/post.module';
 
 @Module({
@@ -24,13 +25,20 @@ import { PostShareEntity } from './database/PostShare.entity';
       username: 'root',
       password: '',
       database: 'social-media',
-      entities: [UserEntity, PostEntity, UserPostEntity, PostShareEntity],
+      entities: [
+        UserEntity,
+        PostEntity,
+        UserPostEntity,
+        PostShareEntity,
+        SavedPostEntity,
+      ],
       synchronize: true,
     }),
     UserEntity,
     PostEntity,
     UserPostEntity,
     PostShareEntity,
+    SavedPostEntity,
     // AuthModule,
     MulterModule.register({
       storage,

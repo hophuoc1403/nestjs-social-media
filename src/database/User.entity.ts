@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import { UserPostEntity } from './UserPost.entity';
 import { PostShareEntity } from './PostShare.entity';
+import { SavedPostEntity } from './SavedPost.entity';
 
 @Entity({ name: 'users' })
 export class UserEntity {
@@ -48,6 +49,9 @@ export class UserEntity {
   userPost: UserPostEntity[];
   @OneToMany(() => PostShareEntity, (postShare) => postShare.user)
   postShare: PostShareEntity[];
+
+  @OneToMany(() => SavedPostEntity, (savedPost) => savedPost.user)
+  savedPost: SavedPostEntity[];
   //
   // @ManyToMany(() => PostEntity)
   // @JoinTable({
