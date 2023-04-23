@@ -10,11 +10,11 @@ import { fileFilter, storage } from './config/multer.config';
 // import { UserModule } from './user/user.module';
 import { ServeStaticModule } from '@nestjs/serve-static/dist/serve-static.module';
 import { join } from 'path';
-import { UserPostEntity } from './database/UserPost.entity';
 import { PostEntity } from './database/Post.entity';
 import { PostShareEntity } from './database/PostShare.entity';
 import { SavedPostEntity } from './database/SavedPost.entity';
 import { CommentEntity } from './database/Comment.entity';
+import { LikeEntity } from './database/Like.entity';
 // import { PostModule } from './post/post.module';
 
 @Module({
@@ -29,19 +29,19 @@ import { CommentEntity } from './database/Comment.entity';
       entities: [
         UserEntity,
         PostEntity,
-        UserPostEntity,
         PostShareEntity,
         SavedPostEntity,
         CommentEntity,
+        LikeEntity,
       ],
       synchronize: true,
     }),
     UserEntity,
     PostEntity,
-    UserPostEntity,
     PostShareEntity,
     SavedPostEntity,
     CommentEntity,
+    LikeEntity,
     // AuthModule,
     MulterModule.register({
       storage,

@@ -6,9 +6,9 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { UserPostEntity } from './UserPost.entity';
 import { PostShareEntity } from './PostShare.entity';
 import { SavedPostEntity } from './SavedPost.entity';
+import { PostEntity } from './Post.entity';
 
 @Entity({ name: 'users' })
 export class UserEntity {
@@ -45,8 +45,8 @@ export class UserEntity {
   @Column({ nullable: false })
   role: string;
 
-  @OneToMany(() => UserPostEntity, (userPost) => userPost.user)
-  userPost: UserPostEntity[];
+  @OneToMany(() => PostEntity, (post) => post.user)
+  userPost: PostEntity[];
   @OneToMany(() => PostShareEntity, (postShare) => postShare.user)
   postShare: PostShareEntity[];
 

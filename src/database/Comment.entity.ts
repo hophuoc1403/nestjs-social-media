@@ -7,7 +7,6 @@ import {
 } from 'typeorm';
 import { PostEntity } from './Post.entity';
 import { PostShareEntity } from './PostShare.entity';
-import { UserPostEntity } from './UserPost.entity';
 
 @Entity({ name: 'comments' })
 export class CommentEntity {
@@ -20,7 +19,7 @@ export class CommentEntity {
   @Column()
   parentCommentId: number;
 
-  @ManyToOne(() => UserPostEntity, (post) => post.postComment)
+  @ManyToOne(() => PostEntity, (post) => post.postComment)
   @JoinColumn()
   Post: number;
 

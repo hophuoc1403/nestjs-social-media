@@ -9,6 +9,7 @@ import {
 import { UserEntity } from './User.entity';
 import { PostEntity } from './Post.entity';
 import { CommentEntity } from './Comment.entity';
+import { LikeEntity } from './Like.entity';
 
 @Entity({ name: 'post_share' })
 export class PostShareEntity {
@@ -31,4 +32,7 @@ export class PostShareEntity {
 
   @OneToMany(() => CommentEntity, (comment) => comment.sharePost)
   sharePostComment: CommentEntity[];
+
+  @OneToMany(() => LikeEntity, (like) => like.postShare)
+  like: LikeEntity[];
 }
