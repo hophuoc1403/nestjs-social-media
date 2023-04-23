@@ -1,5 +1,13 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { PostEntity } from './Post.entity';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { UserPostEntity } from './UserPost.entity';
+import { PostShareEntity } from './PostShare.entity';
 
 @Entity({ name: 'users' })
 export class UserEntity {
@@ -36,9 +44,22 @@ export class UserEntity {
   @Column({ nullable: false })
   role: string;
 
-  @OneToMany(() => PostEntity, (post) => post.user)
-  post: PostEntity;
-
-  @OneToMany(() => PostEntity, (post) => post.userRoot)
-  postRoot: PostEntity;
+  @OneToMany(() => UserPostEntity, (userPost) => userPost.user)
+  userPost: UserPostEntity[];
+  @OneToMany(() => PostShareEntity, (postShare) => postShare.user)
+  postShare: PostShareEntity[];
+  //
+  // @ManyToMany(() => PostEntity)
+  // @JoinTable({
+  //   name: 'user_post',
+  //   joinColumn: {
+  //     name: 'userId',
+  //     referencedColumnName: 'id',
+  //   },
+  //   inverseJoinColumn: {
+  //     name: 'postId',
+  //     referencedColumnName: 'id',
+  //   },
+  // })
+  // posts: PostEntity[];
 }

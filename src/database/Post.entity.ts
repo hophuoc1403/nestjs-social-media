@@ -1,17 +1,6 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  JoinTable,
-  ManyToMany,
-  ManyToOne,
-  OneToMany,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
-import { UserEntity } from './User.entity';
-import { LikeEntity } from './Like.entity';
-import { CommentEntity } from './Comment.entity';
-import { TagEntity } from './Tag.entity';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { UserPostEntity } from './UserPost.entity';
+import { PostShareEntity } from './PostShare.entity';
 
 @Entity({ name: 'posts' })
 export class PostEntity {
@@ -21,45 +10,15 @@ export class PostEntity {
   @Column({ nullable: false })
   description: string;
 
-  @Column()
+  @Column({ nullable: false })
   picturePath: string;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 
-  @Column({ nullable: true })
-  createdAtRoot: Date;
+  @OneToMany(() => UserPostEntity, (userPost) => userPost.post)
+  userPost: UserPostEntity[];
 
-  @Column()
-  sharedContent: string;
-
-  @ManyToOne(() => UserEntity)
-  @JoinColumn()
-  user: UserEntity;
-
-  @ManyToOne(() => UserEntity)
-  @JoinColumn()
-  userRoot: UserEntity;
-  se;
-  @OneToMany(() => LikeEntity, (like) => like.postId)
-  likes: LikeEntity;
-
-  @OneToMany(() => CommentEntity, (comment) => comment.postId)
-  comments: CommentEntity;
-
-  // @OneToMany(() => PostTagEntity, (postTag) => postTag.post)
-  // tags: TagEntity[];
-  @ManyToMany(() => TagEntity)
-  @JoinTable({
-    name: 'post_tag',
-    joinColumn: {
-      name: 'postId',
-      referencedColumnName: 'id',
-    },
-    inverseJoinColumn: {
-      name: 'tagId',
-      referencedColumnName: 'id',
-    },
-  })
-  tags: TagEntity[];
+  @OneToMany(() => PostShareEntity, (postShare) => postShare.post)
+  postShare: PostShareEntity[];
 }
