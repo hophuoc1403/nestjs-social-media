@@ -6,6 +6,7 @@ const allowedExtensions = ['.jpg', '.jpeg', '.png', '.gif'];
 
 export const fileFilter = (req, file, callback) => {
   const extension = extname(file.originalname);
+  console.log(extension);
   if (!allowedExtensions.includes(extension)) {
     return callback(
       new BadRequestException(`File format ${extension} is not supported`),

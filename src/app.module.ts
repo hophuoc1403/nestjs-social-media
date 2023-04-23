@@ -15,6 +15,10 @@ import { PostShareEntity } from './database/PostShare.entity';
 import { SavedPostEntity } from './database/SavedPost.entity';
 import { CommentEntity } from './database/Comment.entity';
 import { LikeEntity } from './database/Like.entity';
+import { TagEntity } from './database/Tag.entity';
+import { PostTagEntity } from './database/PostTag.entity';
+import { PostModule } from './post/post.module';
+import { UserFriendEntity } from './database/UserFriend.entity';
 // import { PostModule } from './post/post.module';
 
 @Module({
@@ -33,6 +37,9 @@ import { LikeEntity } from './database/Like.entity';
         SavedPostEntity,
         CommentEntity,
         LikeEntity,
+        TagEntity,
+        PostTagEntity,
+        UserFriendEntity,
       ],
       synchronize: true,
     }),
@@ -42,7 +49,10 @@ import { LikeEntity } from './database/Like.entity';
     SavedPostEntity,
     CommentEntity,
     LikeEntity,
-    // AuthModule,
+    TagEntity,
+    PostTagEntity,
+    AuthModule,
+    UserFriendEntity,
     MulterModule.register({
       storage,
       fileFilter,
@@ -51,7 +61,7 @@ import { LikeEntity } from './database/Like.entity';
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'uploads'),
     }),
-    // PostModule,
+    PostModule,
   ],
   controllers: [AppController],
   providers: [AppService],

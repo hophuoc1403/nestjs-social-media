@@ -11,6 +11,7 @@ import { CommentEntity } from './Comment.entity';
 import { UserEntity } from './User.entity';
 import { SavedPostEntity } from './SavedPost.entity';
 import { LikeEntity } from './Like.entity';
+import { PostTagEntity } from './PostTag.entity';
 
 @Entity({ name: 'posts' })
 export class PostEntity {
@@ -41,4 +42,7 @@ export class PostEntity {
 
   @OneToMany(() => LikeEntity, (like) => like.post)
   like: LikeEntity[];
+
+  @OneToMany(() => PostTagEntity, (postTag) => postTag.post)
+  postTag: PostTagEntity[];
 }

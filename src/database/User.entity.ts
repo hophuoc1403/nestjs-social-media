@@ -9,6 +9,7 @@ import {
 import { PostShareEntity } from './PostShare.entity';
 import { SavedPostEntity } from './SavedPost.entity';
 import { PostEntity } from './Post.entity';
+import { UserFriendEntity } from './UserFriend.entity';
 
 @Entity({ name: 'users' })
 export class UserEntity {
@@ -52,6 +53,11 @@ export class UserEntity {
 
   @OneToMany(() => SavedPostEntity, (savedPost) => savedPost.user)
   savedPost: SavedPostEntity[];
+
+  @OneToMany(() => UserFriendEntity, (userFriend) => userFriend.user)
+  userFriend: UserFriendEntity[];
+  @OneToMany(() => UserFriendEntity, (userFriend) => userFriend.friend)
+  userFriendId: UserFriendEntity[];
   //
   // @ManyToMany(() => PostEntity)
   // @JoinTable({
