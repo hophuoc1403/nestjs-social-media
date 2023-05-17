@@ -5,5 +5,5 @@ export class EditPostDto {
   @IsString()
   description: string;
 
-  picturePath?: string;
+  pictureDelete?: string;
 }

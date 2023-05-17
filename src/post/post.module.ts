@@ -10,6 +10,7 @@ import { AuthGuard } from '../strategy/login.strategy';
 import { JwtService } from '@nestjs/jwt';
 import { PostTagEntity } from '../database/PostTag.entity';
 import { TagEntity } from '../database/Tag.entity';
+import { UserPostEntity } from '../database/UserPost.entity';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { TagEntity } from '../database/Tag.entity';
       UserEntity,
       PostTagEntity,
       TagEntity,
+      UserPostEntity,
     ]),
   ],
   controllers: [PostController],

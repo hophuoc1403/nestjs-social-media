@@ -1,17 +1,21 @@
 import { Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { UserEntity } from './User.entity';
-import { PostEntity } from './Post.entity';
+import { UserPostEntity } from './UserPost.entity';
 
 @Entity({ name: 'saved_post' })
 export class SavedPostEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => PostEntity, (userPost) => userPost.savedPost)
+  @ManyToOne(() => UserPostEntity, (userPost) => userPost.savedPost, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn()
-  userPost: number;
+  userPost: UserPostEntity;
 
-  @ManyToOne(() => UserEntity, (user) => user.savedPost)
+  @ManyToOne(() => UserEntity, (user) => user.savedPost, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn()
-  user: number;
+  user: UserEntity;
 }

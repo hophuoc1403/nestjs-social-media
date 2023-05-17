@@ -1,5 +1,7 @@
 import {
   BadRequestException,
+  HttpException,
+  HttpStatus,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -24,7 +26,8 @@ export class AuthService {
     const ifExist = await this.userRepository.findOne({
       where: { email: userInformation.email },
     });
-    if (ifExist) throw new BadRequestException('email already exist');
+    if (ifExist)
+      throw new HttpException('email already exist', HttpStatus.BAD_REQUEST);
     const hashedPassword = await hashPassword(userInformation.password);
     const newUser = this.userRepository.save({
       ...userInformation,
@@ -42,13 +45,16 @@ export class AuthService {
     email: string;
     password: string;
   }): Promise<any> {
-    const user = await this.userRepository.findOne({ where: { email } });
+    const user = await this.userRepository.findOne({
+      where: { email },
+      relations: ['friends'],
+    });
     if (!user) {
-      return { message: "account didn't exist" };
+      return new HttpException("account didn't exist", HttpStatus.BAD_REQUEST);
     }
     const isSamePassword = await bcrypt.compare(password, user.password);
     if (!isSamePassword) {
-      throw new UnauthorizedException();
+      throw new HttpException('not valid information', HttpStatus.BAD_REQUEST);
     }
     const { password: userPassword, ...payload } = user;
     return {
@@ -56,6 +62,11 @@ export class AuthService {
         secret: jwtConstants.secret,
         expiresIn: '20m',
       }),
+      refresh_token: this.jwtService.sign(payload, {
+        secret: jwtConstants.refresh,
+        expiresIn: '20m',
+      }),
+      user,
     };
   }
 }

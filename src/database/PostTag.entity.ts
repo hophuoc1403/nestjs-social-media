@@ -7,11 +7,15 @@ export class PostTagEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => PostEntity, (post) => post.postTag)
+  @ManyToOne(() => PostEntity, (post) => post.postTag, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn()
-  post: number;
+  post: PostEntity;
 
-  @ManyToOne(() => TagEntity, (tag) => tag.postTag)
+  @ManyToOne(() => TagEntity, (tag) => tag.postTag, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn()
-  tag: number;
+  tag: TagEntity;
 }

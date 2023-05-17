@@ -1,17 +1,21 @@
 import { Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { PostShareEntity } from './PostShare.entity';
-import { PostEntity } from './Post.entity';
+import { UserPostEntity } from './UserPost.entity';
+import { UserEntity } from './User.entity';
 
 @Entity({ name: 'likes' })
 export class LikeEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => PostEntity, (post) => post.like)
+  @ManyToOne(() => UserPostEntity, (post) => post.likes, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn()
-  post: number;
+  post: UserPostEntity;
 
-  @ManyToOne(() => PostShareEntity, (postShare) => postShare.like)
+  @ManyToOne(() => UserEntity, (user) => user.userLike, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn()
-  postShare: number;
+  user: UserEntity;
 }

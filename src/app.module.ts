@@ -7,19 +7,18 @@ import * as process from 'process';
 import { AuthModule } from './auth/auth.module';
 import { MulterModule } from '@nestjs/platform-express';
 import { fileFilter, storage } from './config/multer.config';
-// import { UserModule } from './user/user.module';
+import { UserModule } from './user/user.module';
 import { ServeStaticModule } from '@nestjs/serve-static/dist/serve-static.module';
 import { join } from 'path';
 import { PostEntity } from './database/Post.entity';
-import { PostShareEntity } from './database/PostShare.entity';
+import { UserPostEntity } from './database/UserPost.entity';
 import { SavedPostEntity } from './database/SavedPost.entity';
 import { CommentEntity } from './database/Comment.entity';
-import { LikeEntity } from './database/Like.entity';
 import { TagEntity } from './database/Tag.entity';
+import { LikeEntity } from './database/Like.entity';
 import { PostTagEntity } from './database/PostTag.entity';
 import { PostModule } from './post/post.module';
 import { UserFriendEntity } from './database/UserFriend.entity';
-// import { PostModule } from './post/post.module';
 
 @Module({
   imports: [
@@ -33,7 +32,7 @@ import { UserFriendEntity } from './database/UserFriend.entity';
       entities: [
         UserEntity,
         PostEntity,
-        PostShareEntity,
+        UserPostEntity,
         SavedPostEntity,
         CommentEntity,
         LikeEntity,
@@ -41,27 +40,27 @@ import { UserFriendEntity } from './database/UserFriend.entity';
         PostTagEntity,
         UserFriendEntity,
       ],
-      synchronize: true,
+      synchronize: false,
     }),
     UserEntity,
     PostEntity,
-    PostShareEntity,
+    UserPostEntity,
     SavedPostEntity,
     CommentEntity,
     LikeEntity,
     TagEntity,
     PostTagEntity,
-    AuthModule,
     UserFriendEntity,
     MulterModule.register({
       storage,
       fileFilter,
     }),
-    // UserModule,
+    AuthModule,
+    UserModule,
+    PostModule,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'uploads'),
     }),
-    PostModule,
   ],
   controllers: [AppController],
   providers: [AppService],

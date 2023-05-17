@@ -10,4 +10,6 @@ export interface EditPostParams {
   description: string;
   picturePath?: string;
   tags?: number[];
+
+  pictureDelete?: string;
 }

@@ -5,8 +5,8 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { PostEntity } from './Post.entity';
-import { PostShareEntity } from './PostShare.entity';
+import { UserPostEntity } from './UserPost.entity';
+import { UserEntity } from './User.entity';
 
 @Entity({ name: 'comments' })
 export class CommentEntity {
@@ -16,14 +16,21 @@ export class CommentEntity {
   @Column({ nullable: false })
   content: string;
 
-  @Column()
+  @Column({ nullable: true })
   parentCommentId: number;
 
-  @ManyToOne(() => PostEntity, (post) => post.postComment)
+  @ManyToOne(() => UserPostEntity, (post) => post.comments, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn()
-  Post: number;
+  post: UserPostEntity;
 
-  @ManyToOne(() => PostShareEntity, (postShare) => postShare.sharePostComment)
+  @ManyToOne(() => UserEntity, (user) => user.comment, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn()
-  sharePost: number;
+  user: UserEntity;
+
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  createdAt: Date;
 }

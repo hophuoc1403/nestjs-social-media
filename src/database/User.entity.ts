@@ -1,15 +1,9 @@
-import {
-  Column,
-  Entity,
-  JoinTable,
-  ManyToMany,
-  OneToMany,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
-import { PostShareEntity } from './PostShare.entity';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { SavedPostEntity } from './SavedPost.entity';
-import { PostEntity } from './Post.entity';
 import { UserFriendEntity } from './UserFriend.entity';
+import { UserPostEntity } from './UserPost.entity';
+import { CommentEntity } from './Comment.entity';
+import { LikeEntity } from './Like.entity';
 
 @Entity({ name: 'users' })
 export class UserEntity {
@@ -46,18 +40,27 @@ export class UserEntity {
   @Column({ nullable: false })
   role: string;
 
-  @OneToMany(() => PostEntity, (post) => post.user)
-  userPost: PostEntity[];
-  @OneToMany(() => PostShareEntity, (postShare) => postShare.user)
-  postShare: PostShareEntity[];
+  @OneToMany(() => UserPostEntity, (post) => post.user)
+  userPost: UserPostEntity[];
+
+  @OneToMany(() => UserPostEntity, (post) => post.userRoot)
+  userRoot: UserPostEntity[];
 
   @OneToMany(() => SavedPostEntity, (savedPost) => savedPost.user)
   savedPost: SavedPostEntity[];
 
   @OneToMany(() => UserFriendEntity, (userFriend) => userFriend.user)
-  userFriend: UserFriendEntity[];
+  friends: UserFriendEntity[];
+
   @OneToMany(() => UserFriendEntity, (userFriend) => userFriend.friend)
   userFriendId: UserFriendEntity[];
+
+  @OneToMany(() => CommentEntity, (cmt) => cmt.user)
+  comment: CommentEntity[];
+
+  @OneToMany(() => LikeEntity, (like) => like.user)
+  userLike: LikeEntity[];
+
   //
   // @ManyToMany(() => PostEntity)
   // @JoinTable({

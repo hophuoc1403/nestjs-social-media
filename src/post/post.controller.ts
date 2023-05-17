@@ -1,12 +1,14 @@
 import {
   Body,
   Controller,
+  DefaultValuePipe,
   Delete,
   Get,
   Param,
   ParseIntPipe,
   Patch,
   Post,
+  Query,
   Req,
   UploadedFile,
   UseGuards,
@@ -22,23 +24,28 @@ import { AuthGuard } from '../strategy/login.strategy';
 import { EditPostDto } from './dtos/EditPost.dto';
 import { AddPostParams } from './@types/post.params';
 import { SharePostDto } from './dtos/SharePost.dto';
+import { AddCommentDto } from './dtos/AddComment.dto';
+import { LikePostDto } from './dtos/LikePost.dto';
 
 @UseGuards(AuthGuard)
-@Controller('api/post')
+@Controller('api/posts')
 export class PostController {
   constructor(private postService: PostService) {}
   @Get('/')
-  async getAllPost() {
-    return this.postService.getAllPost();
+  async getAllPost(
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page = 1,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit = 5,
+  ) {
+    return this.postService.getAllPost({ limit, page });
   }
 
+  @UsePipes(new ValidationPipe())
   @UseInterceptors(
     FileInterceptor('picturePath', {
       storage,
     }),
   )
-  @UsePipes(new ValidationPipe())
-  @Post('add')
+  @Post('/')
   async addPost(
     @UploadedFile() picturePath,
     @Body() post: AddPostDto,
@@ -55,8 +62,8 @@ export class PostController {
     return this.postService.addPost(payload);
   }
 
-  @Delete('delete')
-  async deletePost(@Body('postId', ParseIntPipe) postId: number) {
+  @Delete('delete/:postId')
+  async deletePost(@Param('postId', ParseIntPipe) postId: number) {
     return this.postService.deletePost({ postId: postId });
   }
 
@@ -72,7 +79,7 @@ export class PostController {
     @Param('id', ParseIntPipe) id: number,
     @Body() postInfo: EditPostDto,
   ) {
-    const payload: any = { id, postInfo };
+    const payload: any = { id, ...postInfo };
     if (picturePath) {
       payload.postInfo.picturePath = picturePath.filename;
     }
@@ -83,5 +90,60 @@ export class PostController {
   @Post('share')
   async sharePost(@Body() postInfo: SharePostDto, @Req() req) {
     return this.postService.sharePost({ postInfo, userId: req.user.id });
+  }
+
+  @UsePipes(new ValidationPipe())
+  @Post('comment')
+  async addComment(@Body() comment: AddCommentDto, @Req() req) {
+    return this.postService.addComment({ comment, userId: req.user.id });
+  }
+
+  @Get('comment/:postId')
+  async getComment(
+    @Param('postId', ParseIntPipe) postId: number,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page = 1,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit = 5,
+  ) {
+    return this.postService.getComment({ postId, page, limit });
+  }
+
+  @Delete('comment/:id')
+  async deleteComment(@Param('id', ParseIntPipe) commentId: number) {
+    return this.postService.deleteComment({ commentId });
+  }
+
+  @Patch('comment/:id')
+  async editComment(
+    @Param('id', ParseIntPipe) commentId: number,
+    @Body() param: { content: string },
+  ) {
+    return this.postService.editComment({ commentId, content: param.content });
+  }
+
+  @UsePipes(new ValidationPipe())
+  @Post('like')
+  async likePost(@Body() post: LikePostDto, @Req() req) {
+    return this.postService.likePost({
+      postId: post.postId,
+      userId: req.user.id,
+    });
+  }
+
+  @Get('tags')
+  async getTags() {
+    return this.postService.getTags();
+  }
+  @Get('detail/:id')
+  async getSpecificPost(@Param('id', ParseIntPipe) postId: number) {
+    return this.postService.getPostDetail(postId);
+  }
+
+  @Get(':id')
+  async getUserPost(
+    @Param('id', ParseIntPipe) userId: number,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page = 1,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit = 5,
+  ) {
+    return this.postService.getUserPost(userId, { limit, page });
   }
 }

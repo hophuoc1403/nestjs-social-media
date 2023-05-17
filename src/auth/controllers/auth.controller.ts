@@ -1,6 +1,9 @@
 import {
+  ArgumentsHost,
   Body,
+  Catch,
   Controller,
+  HttpException,
   Post,
   UploadedFile,
   UseInterceptors,
@@ -35,6 +38,19 @@ export class AuthController {
   @Post('sign-in')
   @UsePipes(new ValidationPipe())
   async signIn(@Body() payload: SignInDto) {
+    console.log({ payload });
     return this.authService.signIn({ ...payload });
+  }
+
+  // @ts-ignore
+  @Catch(HttpException)
+  catchHttpException(exception: HttpException, host: ArgumentsHost) {
+    const context = host.switchToHttp();
+    const response = context.getResponse();
+
+    const status = exception.getStatus();
+    const message = exception.message;
+
+    response.status(status).json({ message });
   }
 }
