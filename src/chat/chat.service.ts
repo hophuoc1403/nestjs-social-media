@@ -38,4 +38,21 @@ export class ChatService {
 
     return { messages: allMessages, room: roomInfo };
   }
+  async getMessageWithTitle(userId: number) {
+    const rooms = await this.roomChatRepository
+      .createQueryBuilder('room')
+      .where('(room.member1 = :userId1) OR (room.member2 = :userId1)')
+      .setParameter('userId1', userId)
+      .getMany();
+
+    return await Promise.all(
+      rooms.map(async (room) => {
+        return await this.chatRepository.findOne({
+          where: { room: { id: room.id } },
+          order: { createdAt: 'DESC' },
+          relations: ['sender', 'room', 'room.member1', 'room.member2'],
+        });
+      }),
+    );
+  }
 }
