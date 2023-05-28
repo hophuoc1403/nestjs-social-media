@@ -14,6 +14,7 @@ import { SavedPostEntity } from './SavedPost.entity';
 import { CommentEntity } from './Comment.entity';
 import { LikeEntity } from './Like.entity';
 import { PostEntity } from './Post.entity';
+import { NotificationEntity } from './Notification.entity';
 // import { TagEntity } from './Tag.entity';
 
 @Entity({ name: 'user_post' })
@@ -54,6 +55,9 @@ export class UserPostEntity {
 
   @OneToMany(() => LikeEntity, (like) => like.post)
   likes: LikeEntity[];
+
+  @OneToMany(() => NotificationEntity, (noti) => noti.post)
+  notification: NotificationEntity[];
 
   @ManyToMany(() => TagEntity)
   @JoinTable({

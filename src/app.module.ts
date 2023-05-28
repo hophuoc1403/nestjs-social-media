@@ -22,6 +22,8 @@ import { UserFriendEntity } from './database/UserFriend.entity';
 import { ChatModule } from './chat/chat.module';
 import { RoomChatEntity } from './database/RoomChat.entity';
 import { ChatEntity } from './database/Chat.entity';
+import { NotificationEntity } from './database/Notification.entity';
+import { NotificationModule } from './notification/notification.module';
 
 @Module({
   imports: [
@@ -44,6 +46,7 @@ import { ChatEntity } from './database/Chat.entity';
         UserFriendEntity,
         RoomChatEntity,
         ChatEntity,
+        NotificationEntity,
       ],
       synchronize: false,
     }),
@@ -58,6 +61,7 @@ import { ChatEntity } from './database/Chat.entity';
     UserFriendEntity,
     RoomChatEntity,
     ChatEntity,
+    NotificationEntity,
     MulterModule.register({
       storage,
       fileFilter,
@@ -66,6 +70,7 @@ import { ChatEntity } from './database/Chat.entity';
     UserModule,
     PostModule,
     ChatModule,
+    NotificationModule,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'uploads'),
     }),

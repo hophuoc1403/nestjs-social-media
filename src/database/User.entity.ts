@@ -6,6 +6,7 @@ import { CommentEntity } from './Comment.entity';
 import { LikeEntity } from './Like.entity';
 import { RoomChatEntity } from './RoomChat.entity';
 import { ChatEntity } from './Chat.entity';
+import { NotificationEntity } from './Notification.entity';
 
 @Entity({ name: 'users' })
 export class UserEntity {
@@ -71,6 +72,11 @@ export class UserEntity {
 
   @OneToMany(() => ChatEntity, (chat) => chat.sender)
   chat: ChatEntity[];
+
+  @OneToMany(() => NotificationEntity, (noti) => noti.user)
+  notification: NotificationEntity[];
+  @OneToMany(() => NotificationEntity, (noti) => noti.receiver)
+  receiver: NotificationEntity[];
 
   //
   // @ManyToMany(() => PostEntity)
