@@ -8,4 +8,6 @@ export class SharePostDto {
   @IsNotEmpty()
   @IsNumber()
   postId: number;
+
+  userRoot: number;
 }

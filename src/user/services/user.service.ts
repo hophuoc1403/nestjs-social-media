@@ -80,12 +80,13 @@ export class UserService {
   }
 
   async updateProfile(userInformation: UserOptional) {
-    await this.userRepository.update(userInformation.id, {
-      email: userInformation.email,
-      firstName: userInformation.firstName,
-      lastName: userInformation.lastName,
-      location: userInformation.location,
-      occupation: userInformation.occupation,
+    const { id, ...rest } = userInformation;
+    await this.userRepository.update(id, {
+      email: rest.email,
+      firstName: rest.firstName,
+      lastName: rest.lastName,
+      location: rest.location,
+      occupation: rest.occupation,
     });
 
     return { message: 'update user success !' };

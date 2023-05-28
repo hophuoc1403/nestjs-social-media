@@ -28,7 +28,7 @@ import { AddCommentDto } from './dtos/AddComment.dto';
 import { LikePostDto } from './dtos/LikePost.dto';
 
 @UseGuards(AuthGuard)
-@Controller('api/posts')
+@Controller('posts')
 export class PostController {
   constructor(private postService: PostService) {}
   @Get('/')
@@ -92,6 +92,16 @@ export class PostController {
     return this.postService.sharePost({ postInfo, userId: req.user.id });
   }
 
+  @Get('share')
+  async getSharedPost() {
+    return this.postService.getSharedPost();
+  }
+
+  @Get('find/:content')
+  async findPost(@Param('content') content: string) {
+    return this.postService.searchPost(content);
+  }
+
   @UsePipes(new ValidationPipe())
   @Post('comment')
   async addComment(@Body() comment: AddCommentDto, @Req() req) {
@@ -133,6 +143,12 @@ export class PostController {
   async getTags() {
     return this.postService.getTags();
   }
+
+  @Get('tags/:id')
+  async addTag(@Param('id', ParseIntPipe) id: number) {
+    return this.postService.getPostByTags(id);
+  }
+
   @Get('detail/:id')
   async getSpecificPost(@Param('id', ParseIntPipe) postId: number) {
     return this.postService.getPostDetail(postId);

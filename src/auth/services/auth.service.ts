@@ -1,10 +1,4 @@
-import {
-  BadRequestException,
-  HttpException,
-  HttpStatus,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from '../../database/User.entity';
 import { Repository } from 'typeorm';
@@ -64,9 +58,29 @@ export class AuthService {
       }),
       refresh_token: this.jwtService.sign(payload, {
         secret: jwtConstants.refresh,
-        expiresIn: '20m',
+        expiresIn: '3d',
       }),
       user,
+    };
+  }
+
+  async refreshToken(userInfo: any, refreshToken: string) {
+    const verified = this.jwtService.verify(refreshToken, {
+      secret: jwtConstants.refresh,
+    });
+    if (!verified)
+      throw new HttpException('access denied', HttpStatus.BAD_REQUEST);
+
+    const { iat, exp, ...info } = verified;
+    return {
+      access_token: this.jwtService.sign(info, {
+        secret: jwtConstants.secret,
+        expiresIn: '50m',
+      }),
+      refresh_token: this.jwtService.sign(info, {
+        secret: jwtConstants.refresh,
+        expiresIn: '3d',
+      }),
     };
   }
 }

@@ -5,6 +5,5 @@ export class AddPostDto {
   @IsString()
   description: string;
 
-  @IsNotEmpty()
   tags: number[];
 }

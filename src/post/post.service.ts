@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { IsNull, Like, Repository } from 'typeorm';
 import { PostEntity } from '../database/Post.entity';
 import { LikeEntity } from '../database/Like.entity';
 import { CommentEntity } from '../database/Comment.entity';
@@ -94,7 +94,7 @@ export class PostService {
   }
 
   async addPost({ userId, tags, ...post }: AddPostParams) {
-    tags = JSON.parse(tags as unknown as string);
+    tags = tags ? JSON.parse(tags as unknown as string) : null;
     const newPost = await this.postRepository.save({
       ...post,
     });
@@ -103,16 +103,16 @@ export class PostService {
       user: user,
       post: newPost,
     });
-    const allTags: any = [];
-    await Promise.all(
-      tags.map(async (tag) => {
-        const newTag = await this.postTagRepository.save({
-          post: { id: newPost.id },
-          tag: { id: tag },
-        });
-        allTags.push(newTag);
-      }),
-    );
+    if (tags) {
+      await Promise.all(
+        tags.map(async (tag) => {
+          await this.postTagRepository.save({
+            post: { id: newPost.id },
+            tag: { id: tag },
+          });
+        }),
+      );
+    }
     const returnPost = await this.userPostRepository.findOne({
       where: { id: newUserPost.id },
       relations: ['tags', 'user', 'post', 'likes', 'likes.user', 'likes.post'],
@@ -206,7 +206,7 @@ export class PostService {
     const user = await this.userRepository.findOne({ where: { id: userId } });
     const newSharedPost = await this.userPostRepository.save({
       post: { id: postInfo.postId },
-      userRoot: { id: userId },
+      userRoot: { id: postInfo.userRoot },
       sharedContent: postInfo.description,
       user: user,
     });
@@ -223,6 +223,40 @@ export class PostService {
       ],
     });
     return { post: postDetail };
+  }
+
+  async searchPost(content: string) {
+    const results = await this.userPostRepository.find({
+      where: { post: { description: Like(`%${content}%`) } },
+      relations: [
+        'tags',
+        'user',
+        'post',
+        'likes',
+        'likes.user',
+        'likes.post',
+        'userRoot',
+      ],
+    });
+    return { posts: results };
+  }
+
+  async getSharedPost() {
+    const results = await this.userPostRepository.find({
+      where: {
+        sharedContent: IsNull(),
+      },
+      relations: [
+        'tags',
+        'user',
+        'post',
+        'likes',
+        'likes.user',
+        'likes.post',
+        'userRoot',
+      ],
+    });
+    return { posts: results };
   }
 
   // comment service
@@ -323,7 +357,41 @@ export class PostService {
     return { post: currentPost };
   }
 
+  // tags service
+
   async getTags() {
     return await this.tagRepository.find({});
+  }
+
+  async getPostByTags(tagId: number) {
+    const posts = await this.userPostRepository.find({
+      where: { tags: { id: tagId } },
+      relations: [
+        'tags',
+        'user',
+        'post',
+        'likes',
+        'likes.user',
+        'likes.post',
+        'userRoot',
+      ],
+    });
+    // const posts = this.userPostRepository.createQueryBuilder('userPost');
+
+    // await posts
+    //   .leftJoin('userPost.tags', 'tags')
+    //   .where('tags.id  = :id', { id: tagId })
+    //   .leftJoinAndSelect('userPost.user', 'user')
+    //   .leftJoinAndSelect('userPost.post', 'post')
+    //   .leftJoinAndSelect('userPost.tags', 'tags')
+    //   .leftJoinAndSelect('userPost.likes', 'likes')
+    //   .leftJoinAndSelect('likes.user', 'likeUser')
+    //   .leftJoinAndSelect('likes.post', 'likePost')
+    //   .leftJoin('userPost.comments', 'comments')
+    //   .leftJoinAndSelect('userPost.userRoot', 'userRoot')
+    //   .loadRelationCountAndMap('userPost.commentCount', 'userPost.comments')
+    //   .orderBy('userPost.createdAt', 'DESC')
+    //   .getMany();
+    return { posts };
   }
 }

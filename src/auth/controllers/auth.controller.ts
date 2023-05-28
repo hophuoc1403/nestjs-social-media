@@ -5,6 +5,7 @@ import {
   Controller,
   HttpException,
   Post,
+  Req,
   UploadedFile,
   UseInterceptors,
   UsePipes,
@@ -16,7 +17,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { fileFilter, storage } from '../../config/multer.config';
 import { SignInDto } from '../dtos/signIn.dto';
 
-@Controller('api/auth')
+@Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
@@ -38,8 +39,13 @@ export class AuthController {
   @Post('sign-in')
   @UsePipes(new ValidationPipe())
   async signIn(@Body() payload: SignInDto) {
-    console.log({ payload });
     return this.authService.signIn({ ...payload });
+  }
+
+  @Post('refresh')
+  refreshToken(@Body('refreshToken') refreshToken: string, @Req() req) {
+    console.log(req.user);
+    return this.authService.refreshToken(req.user, refreshToken);
   }
 
   // @ts-ignore

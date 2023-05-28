@@ -4,6 +4,8 @@ import { UserFriendEntity } from './UserFriend.entity';
 import { UserPostEntity } from './UserPost.entity';
 import { CommentEntity } from './Comment.entity';
 import { LikeEntity } from './Like.entity';
+import { RoomChatEntity } from './RoomChat.entity';
+import { ChatEntity } from './Chat.entity';
 
 @Entity({ name: 'users' })
 export class UserEntity {
@@ -60,6 +62,15 @@ export class UserEntity {
 
   @OneToMany(() => LikeEntity, (like) => like.user)
   userLike: LikeEntity[];
+
+  @OneToMany(() => RoomChatEntity, (room) => room.member1)
+  chatMember1: RoomChatEntity[];
+
+  @OneToMany(() => RoomChatEntity, (room) => room.member1)
+  chatMember2: RoomChatEntity[];
+
+  @OneToMany(() => ChatEntity, (chat) => chat.sender)
+  chat: ChatEntity[];
 
   //
   // @ManyToMany(() => PostEntity)

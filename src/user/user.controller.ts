@@ -4,7 +4,9 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
+  Req,
   Request,
   UploadedFile,
   UseGuards,
@@ -19,7 +21,7 @@ import { UserOptional } from '../types/user';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { storage } from '../config/multer.config';
 
-@Controller('api/users')
+@Controller('users')
 export class UserController {
   constructor(private userService: UserService) {}
 
@@ -48,9 +50,9 @@ export class UserController {
   }
 
   @UseGuards(AuthGuard)
-  @Get('update')
-  async updateProfile(@Body() information: UserOptional) {
-    return this.userService.updateProfile(information);
+  @Patch('update')
+  async updateProfile(@Body() information: UserOptional, @Req() req) {
+    return this.userService.updateProfile({ ...information, id: req.user.id });
   }
 
   @UseInterceptors(

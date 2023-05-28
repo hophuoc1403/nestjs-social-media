@@ -19,6 +19,9 @@ import { LikeEntity } from './database/Like.entity';
 import { PostTagEntity } from './database/PostTag.entity';
 import { PostModule } from './post/post.module';
 import { UserFriendEntity } from './database/UserFriend.entity';
+import { ChatModule } from './chat/chat.module';
+import { RoomChatEntity } from './database/RoomChat.entity';
+import { ChatEntity } from './database/Chat.entity';
 
 @Module({
   imports: [
@@ -39,6 +42,8 @@ import { UserFriendEntity } from './database/UserFriend.entity';
         TagEntity,
         PostTagEntity,
         UserFriendEntity,
+        RoomChatEntity,
+        ChatEntity,
       ],
       synchronize: false,
     }),
@@ -51,6 +56,8 @@ import { UserFriendEntity } from './database/UserFriend.entity';
     TagEntity,
     PostTagEntity,
     UserFriendEntity,
+    RoomChatEntity,
+    ChatEntity,
     MulterModule.register({
       storage,
       fileFilter,
@@ -58,6 +65,7 @@ import { UserFriendEntity } from './database/UserFriend.entity';
     AuthModule,
     UserModule,
     PostModule,
+    ChatModule,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'uploads'),
     }),
