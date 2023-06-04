@@ -24,6 +24,8 @@ import { RoomChatEntity } from './database/RoomChat.entity';
 import { ChatEntity } from './database/Chat.entity';
 import { NotificationEntity } from './database/Notification.entity';
 import { NotificationModule } from './notification/notification.module';
+import { StoryEntity } from './database/Story.entity';
+import { StoryModule } from './story/story.module';
 
 @Module({
   imports: [
@@ -47,6 +49,7 @@ import { NotificationModule } from './notification/notification.module';
         RoomChatEntity,
         ChatEntity,
         NotificationEntity,
+        StoryEntity,
       ],
       synchronize: false,
     }),
@@ -62,6 +65,7 @@ import { NotificationModule } from './notification/notification.module';
     RoomChatEntity,
     ChatEntity,
     NotificationEntity,
+    StoryEntity,
     MulterModule.register({
       storage,
       fileFilter,
@@ -71,6 +75,7 @@ import { NotificationModule } from './notification/notification.module';
     PostModule,
     ChatModule,
     NotificationModule,
+    StoryModule,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'uploads'),
     }),

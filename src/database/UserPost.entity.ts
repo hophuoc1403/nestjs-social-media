@@ -64,7 +64,7 @@ export class UserPostEntity {
     name: 'post_tag',
     joinColumn: {
       name: 'postId',
-      referencedColumnName: 'id',
+      referencedColumnName: 'post',
     },
     inverseJoinColumn: {
       name: 'tagId',

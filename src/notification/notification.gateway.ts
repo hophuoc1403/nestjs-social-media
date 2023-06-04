@@ -47,7 +47,7 @@ export class NotificationGateway implements OnModuleInit {
     await this.notificationRepository.save({
       message: `${type} ${receiverName}'s post`,
       senderName,
-      type: 'like',
+      type: type,
       post: { id: postId },
       user: { id: senderId },
       receiver: { id: receiverId },
@@ -57,7 +57,7 @@ export class NotificationGateway implements OnModuleInit {
       senderName,
       postId,
       type,
-      message: `${type} ${receiverName}'s post`,
+      message: `${type} your post`,
       receiverId,
     });
   }

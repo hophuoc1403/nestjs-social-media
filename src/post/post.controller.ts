@@ -79,9 +79,13 @@ export class PostController {
     @Param('id', ParseIntPipe) id: number,
     @Body() postInfo: EditPostDto,
   ) {
-    const payload: any = { id, ...postInfo };
+    const payload: any = { id, description: postInfo.description };
+    if (postInfo.pictureDelete) {
+      payload.pictureDelete = postInfo.pictureDelete;
+    }
+    console.log(picturePath);
     if (picturePath) {
-      payload.postInfo.picturePath = picturePath.filename;
+      payload.picturePath = picturePath.filename;
     }
     return this.postService.editPost(payload);
   }

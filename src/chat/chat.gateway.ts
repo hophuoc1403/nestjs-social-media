@@ -52,6 +52,9 @@ export class ChatGateWay implements OnModuleInit {
       room: { id: roomId },
       sender: { id: senderId },
     });
+    this.server
+      .in(roomId.toString())
+      .emit('sendAmountMessage', { senderId, createdAt, message, roomId });
     return 'ok';
   }
 

@@ -7,6 +7,7 @@ import { LikeEntity } from './Like.entity';
 import { RoomChatEntity } from './RoomChat.entity';
 import { ChatEntity } from './Chat.entity';
 import { NotificationEntity } from './Notification.entity';
+import { StoryEntity } from './Story.entity';
 
 @Entity({ name: 'users' })
 export class UserEntity {
@@ -78,6 +79,8 @@ export class UserEntity {
   @OneToMany(() => NotificationEntity, (noti) => noti.receiver)
   receiver: NotificationEntity[];
 
+  @OneToMany(() => StoryEntity, (story) => story.user)
+  story: StoryEntity[];
   //
   // @ManyToMany(() => PostEntity)
   // @JoinTable({

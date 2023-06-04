@@ -61,8 +61,11 @@ export class UserController {
     }),
   )
   @UseGuards(AuthGuard)
-  @Get('update-avatar')
-  async updateAvatar(@UploadedFile() picturePath) {
-    return this.userService.updateAvatar(picturePath.filename);
+  @Patch('update-avatar')
+  async updateAvatar(@UploadedFile() picturePath, @Req() req) {
+    return this.userService.updateAvatar({
+      id: req.user.id,
+      picturePath: picturePath.filename,
+    });
   }
 }

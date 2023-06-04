@@ -5,7 +5,7 @@ import { PostEntity } from '../database/Post.entity';
 import { LikeEntity } from '../database/Like.entity';
 import { CommentEntity } from '../database/Comment.entity';
 import { UserEntity } from '../database/User.entity';
-import fs from 'fs';
+import * as fs from 'fs';
 import { AddPostParams, EditPostParams } from './@types/post.params';
 import { PostTagEntity } from '../database/PostTag.entity';
 import { TagEntity } from '../database/Tag.entity';
@@ -94,6 +94,7 @@ export class PostService {
   }
 
   async addPost({ userId, tags, ...post }: AddPostParams) {
+    console.log(tags);
     tags = tags ? JSON.parse(tags as unknown as string) : null;
     const newPost = await this.postRepository.save({
       ...post,
@@ -141,14 +142,17 @@ export class PostService {
   }
 
   async editPost({ id, tags, pictureDelete, ...postInfo }: EditPostParams) {
-    const currentPost = await this.postRepository.findOne({ where: { id } });
+    const currentPost = await this.postRepository.findOne({
+      where: { id },
+      relations: ['post'],
+    });
     if (postInfo.picturePath) {
       if (currentPost.picturePath) {
-        fs.unlinkSync(`/${currentPost.picturePath}`);
+        await fs.promises.unlink(`uploads/${currentPost.picturePath}`);
       }
     }
     if (pictureDelete) {
-      fs.unlinkSync(`/${pictureDelete}`);
+      await fs.promises.unlink(`uploads/${pictureDelete}`);
     }
 
     // delete tags and add new tags
@@ -181,7 +185,7 @@ export class PostService {
     //   .execute();
 
     const postDetail = await this.userPostRepository.findOne({
-      where: { id },
+      where: { post: { id } },
       relations: [
         'tags',
         'user',
@@ -242,20 +246,20 @@ export class PostService {
   }
 
   async getSharedPost() {
-    const results = await this.userPostRepository.find({
-      where: {
-        sharedContent: IsNull(),
-      },
-      relations: [
-        'tags',
-        'user',
-        'post',
-        'likes',
-        'likes.user',
-        'likes.post',
-        'userRoot',
-      ],
-    });
+    const results = await this.userPostRepository
+      .createQueryBuilder('post')
+      .where('post.userRoot IS NOT NULL')
+      .leftJoinAndSelect('post.user', 'user')
+      .leftJoinAndSelect('post.post', 'posts')
+      .leftJoinAndSelect('post.tags', 'tags')
+      .leftJoinAndSelect('post.likes', 'likes')
+      .leftJoinAndSelect('likes.user', 'likeUser')
+      .leftJoinAndSelect('likes.post', 'likePost')
+      .leftJoin('post.comments', 'comments')
+      .leftJoinAndSelect('post.userRoot', 'userRoot')
+      .loadRelationCountAndMap('post.commentCount', 'post.comments')
+      .orderBy('post.createdAt', 'DESC')
+      .getMany();
     return { posts: results };
   }
 

@@ -66,13 +66,14 @@ export class UserService {
   async getFriends({ userId }: { userId: number }) {
     try {
       const user = await this.getUserInfo(userId);
-      if (!user) return { message: 'user not exist' };
+      if (!user) return { message: 'user not exist', friends: [] };
 
       const friends = await this.userFriendRepository.find({
         where: { user: user },
         relations: ['friend'],
       });
       const friendResponse = friends.map((friend) => friend.friend);
+      console.log({ friendResponse });
       return { friends: friendResponse };
     } catch (e) {
       console.log(e);
@@ -93,12 +94,14 @@ export class UserService {
   }
 
   async updateAvatar({ id, picturePath }: { id: number; picturePath: string }) {
+    console.log(picturePath);
     const user = await this.getUserInfo(id);
     if (user.picturePath !== picturePath) {
-      fs.unlinkSync(`/${user.picturePath}`);
+      await fs.promises.unlink(`uploads/${user.picturePath}`);
     }
 
     await this.userRepository.update(id, { picturePath });
-    return { message: 'update avatar success' };
+    const currentUser = await this.userRepository.findOne({ where: { id } });
+    return { user: currentUser };
   }
 }

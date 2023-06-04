@@ -4,6 +4,8 @@ import { AuthService } from './services/auth.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from '../database/User.entity';
 import { JwtModule, JwtService } from '@nestjs/jwt';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -12,8 +14,18 @@ import { JwtModule, JwtService } from '@nestjs/jwt';
       secret: 'YOUR_SECRET_KEY',
       signOptions: { expiresIn: '60m' },
     }),
+    MailerModule.forRoot({
+      // transport: {
+      //   secure: false,
+      //   host: 'phuoc.anonydev2k3@gmail.com',
+      //   auth: {
+      //     user: 'phuoc',
+      //   },
+      // },
+      transport: 'smtps://user@domain.com:pass@smtp.domain.com',
+    }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtService],
+  providers: [AuthService, JwtService, ConfigService],
 })
 export class AuthModule {}
