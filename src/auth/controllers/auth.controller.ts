@@ -16,6 +16,7 @@ import { SignUpDto } from '../dtos/signUp.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { fileFilter, storage } from '../../config/multer.config';
 import { SignInDto } from '../dtos/signIn.dto';
+import { ResetAccountDto, VerifyAccountDto } from '../dtos/verifyAccount.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -46,6 +47,19 @@ export class AuthController {
   refreshToken(@Body('refreshToken') refreshToken: string, @Req() req) {
     console.log(req.user);
     return this.authService.refreshToken(req.user, refreshToken);
+  }
+
+  @Post('verify-account')
+  handleVerifiAccount(@Body() accountInfo: VerifyAccountDto) {
+    return this.authService.sendMail(accountInfo.email);
+  }
+
+  @Post('reset-password')
+  handleResetPassword(@Body() resetDetail: ResetAccountDto) {
+    return this.authService.resetPassword(
+      resetDetail.token,
+      resetDetail.password,
+    );
   }
 
   // @ts-ignore

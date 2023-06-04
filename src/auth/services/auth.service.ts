@@ -125,7 +125,7 @@ export class AuthService {
     const authenticationCode = this.jwtService.sign(
       { email },
       {
-        secret: jwtConstants.secret,
+        secret: process.env.SECRET_AUTHENTICATION_CODE,
         expiresIn: '5m',
       },
     );
@@ -147,5 +147,18 @@ export class AuthService {
       .catch((err) => {
         console.log(err);
       });
+  }
+
+  async resetPassword(authenticationCode: string, password: string) {
+    const verified = await this.jwtService.verify(authenticationCode, {
+      secret: process.env.SECRET_AUTHENTICATION_CODE,
+    });
+    if (!verified) return HttpStatus.FORBIDDEN;
+    const hashedPassword = await hashPassword(password);
+    await this.userRepository.update(
+      { email: verified.email },
+      { password: hashedPassword },
+    );
+    return { message: 'reset password success !' };
   }
 }

@@ -26,6 +26,7 @@ import { NotificationEntity } from './database/Notification.entity';
 import { NotificationModule } from './notification/notification.module';
 import { StoryEntity } from './database/Story.entity';
 import { StoryModule } from './story/story.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -78,6 +79,10 @@ import { StoryModule } from './story/story.module';
     StoryModule,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'uploads'),
+    }),
+    ConfigModule.forRoot({
+      envFilePath: '.env',
+      isGlobal: true,
     }),
   ],
   controllers: [AppController],
