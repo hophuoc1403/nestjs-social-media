@@ -8,6 +8,7 @@ import { RoomChatEntity } from './RoomChat.entity';
 import { ChatEntity } from './Chat.entity';
 import { NotificationEntity } from './Notification.entity';
 import { StoryEntity } from './Story.entity';
+import { ReportPost } from './ReportPost.entity';
 
 @Entity({ name: 'users' })
 export class UserEntity {
@@ -43,6 +44,9 @@ export class UserEntity {
 
   @Column({ nullable: false })
   role: string;
+
+  @Column()
+  status: string;
 
   @OneToMany(() => UserPostEntity, (post) => post.user)
   userPost: UserPostEntity[];
@@ -81,6 +85,9 @@ export class UserEntity {
 
   @OneToMany(() => StoryEntity, (story) => story.user)
   story: StoryEntity[];
+
+  @OneToMany(() => ReportPost, (report) => report.user)
+  reportPost: ReportPost[];
   //
   // @ManyToMany(() => PostEntity)
   // @JoinTable({

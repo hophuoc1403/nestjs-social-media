@@ -73,7 +73,6 @@ export class UserService {
         relations: ['friend'],
       });
       const friendResponse = friends.map((friend) => friend.friend);
-      console.log({ friendResponse });
       return { friends: friendResponse };
     } catch (e) {
       console.log(e);
@@ -83,14 +82,10 @@ export class UserService {
   async updateProfile(userInformation: UserOptional) {
     const { id, ...rest } = userInformation;
     await this.userRepository.update(id, {
-      email: rest.email,
-      firstName: rest.firstName,
-      lastName: rest.lastName,
-      location: rest.location,
-      occupation: rest.occupation,
+      ...rest,
     });
 
-    return { message: 'update user success !' };
+    return this.userRepository.findOne({ where: { id } });
   }
 
   async updateAvatar({ id, picturePath }: { id: number; picturePath: string }) {

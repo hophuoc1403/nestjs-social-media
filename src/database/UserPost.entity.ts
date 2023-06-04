@@ -15,6 +15,7 @@ import { CommentEntity } from './Comment.entity';
 import { LikeEntity } from './Like.entity';
 import { PostEntity } from './Post.entity';
 import { NotificationEntity } from './Notification.entity';
+import { ReportPost } from './ReportPost.entity';
 // import { TagEntity } from './Tag.entity';
 
 @Entity({ name: 'user_post' })
@@ -58,6 +59,9 @@ export class UserPostEntity {
 
   @OneToMany(() => NotificationEntity, (noti) => noti.post)
   notification: NotificationEntity[];
+
+  @OneToMany(() => ReportPost, (report) => report.post)
+  reportPost: ReportPost[];
 
   @ManyToMany(() => TagEntity)
   @JoinTable({

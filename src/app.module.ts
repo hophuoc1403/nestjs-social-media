@@ -27,6 +27,7 @@ import { NotificationModule } from './notification/notification.module';
 import { StoryEntity } from './database/Story.entity';
 import { StoryModule } from './story/story.module';
 import { ConfigModule } from '@nestjs/config';
+import { ReportPost } from './database/ReportPost.entity';
 
 @Module({
   imports: [
@@ -51,6 +52,7 @@ import { ConfigModule } from '@nestjs/config';
         ChatEntity,
         NotificationEntity,
         StoryEntity,
+        ReportPost,
       ],
       synchronize: false,
     }),
@@ -67,6 +69,7 @@ import { ConfigModule } from '@nestjs/config';
     ChatEntity,
     NotificationEntity,
     StoryEntity,
+    ReportPost,
     MulterModule.register({
       storage,
       fileFilter,
