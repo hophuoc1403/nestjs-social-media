@@ -16,14 +16,18 @@ export class ChatEntity {
   @Column()
   message: string;
 
-  @ManyToOne(() => UserEntity, (user) => user.chat)
+  @ManyToOne(() => UserEntity, (user) => user.chat, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn()
   sender: UserEntity;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 
-  @ManyToOne(() => RoomChatEntity, (room) => room.chat)
+  @ManyToOne(() => RoomChatEntity, (room) => room.chat, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn()
   room: RoomChatEntity;
 }

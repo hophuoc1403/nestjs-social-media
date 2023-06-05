@@ -26,6 +26,7 @@ import { AddPostParams } from './@types/post.params';
 import { SharePostDto } from './dtos/SharePost.dto';
 import { AddCommentDto } from './dtos/AddComment.dto';
 import { LikePostDto } from './dtos/LikePost.dto';
+import { ReportPostDto } from './dtos/ReportPost.dto';
 
 @UseGuards(AuthGuard)
 @Controller('posts')
@@ -97,14 +98,21 @@ export class PostController {
   }
 
   @Get('share')
-  async getSharedPost() {
-    return this.postService.getSharedPost();
+  async getSharedPost(@Req() req) {
+    return this.postService.getSharedPost(req.user.id);
   }
 
   @Get('find/:content')
   async findPost(@Param('content') content: string) {
     return this.postService.searchPost(content);
   }
+
+  @Post('report')
+  async reportPost(@Body() reportDetail: ReportPostDto) {
+    return this.postService.reportPost(reportDetail);
+  }
+
+  // comment controller
 
   @UsePipes(new ValidationPipe())
   @Post('comment')

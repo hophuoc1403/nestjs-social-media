@@ -13,10 +13,14 @@ export class RoomChatEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => UserEntity, (user) => user.chatMember1)
+  @ManyToOne(() => UserEntity, (user) => user.chatMember1, {
+    onDelete: 'CASCADE',
+  })
   member1: UserEntity;
 
-  @ManyToOne(() => UserEntity, (user) => user.chatMember2)
+  @ManyToOne(() => UserEntity, (user) => user.chatMember2, {
+    onDelete: 'CASCADE',
+  })
   member2: UserEntity;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })

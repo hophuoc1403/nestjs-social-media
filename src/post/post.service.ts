@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IsNull, Like, Repository } from 'typeorm';
 import { PostEntity } from '../database/Post.entity';
@@ -13,6 +13,9 @@ import { SharePostDto } from './dtos/SharePost.dto';
 import { UserPostEntity } from '../database/UserPost.entity';
 import { AddCommentDto } from './dtos/AddComment.dto';
 import { paginate } from 'nestjs-typeorm-paginate';
+import { ReportPostDto } from './dtos/ReportPost.dto';
+import { ReportPost } from 'src/database/ReportPost.entity';
+import { SavedPostEntity } from 'src/database/SavedPost.entity';
 
 @Injectable()
 export class PostService {
@@ -31,6 +34,10 @@ export class PostService {
     private tagRepository: Repository<TagEntity>,
     @InjectRepository(UserPostEntity)
     private userPostRepository: Repository<UserPostEntity>,
+    @InjectRepository(ReportPost)
+    private reportPostRepository: Repository<ReportPost>,
+    @InjectRepository(SavedPostEntity)
+    private savedPostRepository: Repository<SavedPostEntity>,
   ) {}
 
   async getAllPost(payload: { limit: number; page: number }) {
@@ -245,9 +252,10 @@ export class PostService {
     return { posts: results };
   }
 
-  async getSharedPost() {
+  async getSharedPost(id: string) {
     const results = await this.userPostRepository
       .createQueryBuilder('post')
+      .where('post.userId = :id', { id })
       .where('post.userRoot IS NOT NULL')
       .leftJoinAndSelect('post.user', 'user')
       .leftJoinAndSelect('post.post', 'posts')
@@ -262,6 +270,25 @@ export class PostService {
       .getMany();
     return { posts: results };
   }
+
+  async reportPost(reportDetail: ReportPostDto) {
+    const { description, postId, title, userId } = reportDetail;
+    await this.reportPostRepository.save({
+      description,
+      title,
+      user: { id: userId },
+      post: { id: postId },
+    });
+    return { message: 'Report success' };
+  }
+
+  // async savePost(userId: number, postId: number) {
+  //   const isExist = await this.savedPostRepository.findOne({
+  //     where: { user: { id: userId }, userPost: { id: postId } },
+  //   });
+  //   if (isExist) return HttpStatus.FORBIDDEN;
+  //   await this.savedPostRepository.save();
+  // }
 
   // comment service
 
@@ -295,11 +322,6 @@ export class PostService {
     page: number;
     limit: number;
   }) {
-    // const allComment = await this.commentRepository.find({
-    //   where: { post: { id: postId } },
-    //   relations: ['post', 'user'],
-    // });
-
     const allComment = this.commentRepository.createQueryBuilder('comment');
 
     allComment

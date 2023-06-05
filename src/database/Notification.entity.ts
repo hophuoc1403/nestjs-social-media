@@ -23,14 +23,18 @@ export class NotificationEntity {
   @JoinColumn()
   user: UserEntity;
 
-  @ManyToOne(() => UserPostEntity, (userPost) => userPost.notification)
+  @ManyToOne(() => UserPostEntity, (userPost) => userPost.notification, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn()
   post: UserPostEntity;
 
   @Column()
   senderName: string;
 
-  @ManyToOne(() => UserEntity, (user) => user.receiver)
+  @ManyToOne(() => UserEntity, (user) => user.receiver, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn()
   receiver: UserEntity;
 }

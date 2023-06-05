@@ -15,7 +15,9 @@ export class StoryEntity {
   @Column()
   image: string;
 
-  @ManyToOne(() => UserEntity, (user) => user.story)
+  @ManyToOne(() => UserEntity, (user) => user.story, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn()
   user: UserEntity;
 

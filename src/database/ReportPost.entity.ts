@@ -13,9 +13,13 @@ export class ReportPost {
   @Column()
   description: string;
 
-  @ManyToOne(() => UserEntity, (user) => user.reportPost)
+  @ManyToOne(() => UserEntity, (user) => user.reportPost, {
+    onDelete: 'CASCADE',
+  })
   user: UserEntity;
 
-  @ManyToOne(() => UserPostEntity, (userPost) => userPost.reportPost)
+  @ManyToOne(() => UserPostEntity, (userPost) => userPost.reportPost, {
+    onDelete: 'CASCADE',
+  })
   post: UserPostEntity;
 }

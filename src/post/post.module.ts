@@ -11,6 +11,8 @@ import { JwtService } from '@nestjs/jwt';
 import { PostTagEntity } from '../database/PostTag.entity';
 import { TagEntity } from '../database/Tag.entity';
 import { UserPostEntity } from '../database/UserPost.entity';
+import { ReportPost } from 'src/database/ReportPost.entity';
+import { SavedPostEntity } from 'src/database/SavedPost.entity';
 
 @Module({
   imports: [
@@ -22,6 +24,8 @@ import { UserPostEntity } from '../database/UserPost.entity';
       PostTagEntity,
       TagEntity,
       UserPostEntity,
+      ReportPost,
+      SavedPostEntity,
     ]),
   ],
   controllers: [PostController],

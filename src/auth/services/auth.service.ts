@@ -49,7 +49,7 @@ export class AuthService {
       relations: ['friends'],
     });
     if (!user) {
-      return new HttpException("account didn't exist", HttpStatus.BAD_REQUEST);
+      return HttpStatus.BAD_REQUEST;
     }
     const isSamePassword = await bcrypt.compare(password, user.password);
     if (!isSamePassword) {
