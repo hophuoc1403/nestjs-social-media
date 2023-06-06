@@ -4,6 +4,8 @@ import {
   Catch,
   Controller,
   HttpException,
+  HttpStatus,
+  Logger,
   Post,
   Req,
   UploadedFile,
@@ -17,6 +19,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { fileFilter, storage } from '../../config/multer.config';
 import { SignInDto } from '../dtos/signIn.dto';
 import { ResetAccountDto, VerifyAccountDto } from '../dtos/verifyAccount.dto';
+import { log } from 'console';
 
 @Controller('auth')
 export class AuthController {
@@ -40,12 +43,12 @@ export class AuthController {
   @Post('sign-in')
   @UsePipes(new ValidationPipe())
   async signIn(@Body() payload: SignInDto) {
+    // throw new HttpException('Test', HttpStatus.FORBIDDEN);
     return this.authService.signIn({ ...payload });
   }
 
   @Post('refresh')
   refreshToken(@Body('refreshToken') refreshToken: string, @Req() req) {
-    console.log(req.user);
     return this.authService.refreshToken(req.user, refreshToken);
   }
 
@@ -62,8 +65,6 @@ export class AuthController {
     );
   }
 
-  // @ts-ignore
-  @Catch(HttpException)
   catchHttpException(exception: HttpException, host: ArgumentsHost) {
     const context = host.switchToHttp();
     const response = context.getResponse();

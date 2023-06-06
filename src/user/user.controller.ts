@@ -28,6 +28,7 @@ export class UserController {
   @UseGuards(AuthGuard)
   @Get('/self-info')
   async getSelfInfo(@Request() req) {
+    console.log(req);
     return this.userService.getUserInfo(req.user.id);
   }
 

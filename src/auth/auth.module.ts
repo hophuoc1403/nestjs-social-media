@@ -15,13 +15,6 @@ import { ConfigService } from '@nestjs/config';
       signOptions: { expiresIn: '60m' },
     }),
     MailerModule.forRoot({
-      // transport: {
-      //   secure: false,
-      //   host: 'phuoc.anonydev2k3@gmail.com',
-      //   auth: {
-      //     user: 'phuoc',
-      //   },
-      // },
       transport: 'smtps://user@domain.com:pass@smtp.domain.com',
     }),
   ],

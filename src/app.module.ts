@@ -28,6 +28,10 @@ import { StoryEntity } from './database/Story.entity';
 import { StoryModule } from './story/story.module';
 import { ConfigModule } from '@nestjs/config';
 import { ReportPost } from './database/ReportPost.entity';
+import { AccountsModule } from './accounts/accounts.module';
+import { APP_FILTER } from '@nestjs/core';
+import { AllExceptionsFilter } from './filters/exception.filter';
+import { TagsModule } from './tags/tags.module';
 
 @Module({
   imports: [
@@ -56,20 +60,6 @@ import { ReportPost } from './database/ReportPost.entity';
       ],
       synchronize: false,
     }),
-    UserEntity,
-    PostEntity,
-    UserPostEntity,
-    SavedPostEntity,
-    CommentEntity,
-    LikeEntity,
-    TagEntity,
-    PostTagEntity,
-    UserFriendEntity,
-    RoomChatEntity,
-    ChatEntity,
-    NotificationEntity,
-    StoryEntity,
-    ReportPost,
     MulterModule.register({
       storage,
       fileFilter,
@@ -80,6 +70,8 @@ import { ReportPost } from './database/ReportPost.entity';
     ChatModule,
     NotificationModule,
     StoryModule,
+    AccountsModule,
+    TagsModule,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'uploads'),
     }),
@@ -89,6 +81,12 @@ import { ReportPost } from './database/ReportPost.entity';
     }),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_FILTER,
+      useClass: AllExceptionsFilter,
+    },
+  ],
 })
 export class AppModule {}

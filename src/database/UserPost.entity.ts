@@ -30,7 +30,6 @@ export class UserPostEntity {
   user: UserEntity;
 
   @ManyToOne(() => UserEntity, (user) => user.userRoot, {
-    nullable: true,
     onDelete: 'CASCADE',
   })
   @JoinColumn()

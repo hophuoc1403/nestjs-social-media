@@ -27,6 +27,7 @@ import { SharePostDto } from './dtos/SharePost.dto';
 import { AddCommentDto } from './dtos/AddComment.dto';
 import { LikePostDto } from './dtos/LikePost.dto';
 import { ReportPostDto } from './dtos/ReportPost.dto';
+import { AdminGuard } from 'src/strategy/adminRole.strategy';
 
 @UseGuards(AuthGuard)
 @Controller('posts')
@@ -173,5 +174,20 @@ export class PostController {
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit = 5,
   ) {
     return this.postService.getUserPost(userId, { limit, page });
+  }
+
+  @UseGuards(AdminGuard)
+  @Get('/reported-post/get')
+  async getReportedPost(
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit = 5,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page = 1,
+  ) {
+    return this.postService.getReportedPost({ limit, page });
+  }
+
+  @UseGuards(AdminGuard)
+  @Delete('reported-post/:id')
+  async deleteReportedPost(@Param('id', ParseIntPipe) id: number) {
+    return this.postService.deleteReportedPost(id);
   }
 }

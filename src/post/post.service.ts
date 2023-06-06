@@ -1,6 +1,6 @@
 import { Injectable, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { IsNull, Like, Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { PostEntity } from '../database/Post.entity';
 import { LikeEntity } from '../database/Like.entity';
 import { CommentEntity } from '../database/Comment.entity';
@@ -12,7 +12,7 @@ import { TagEntity } from '../database/Tag.entity';
 import { SharePostDto } from './dtos/SharePost.dto';
 import { UserPostEntity } from '../database/UserPost.entity';
 import { AddCommentDto } from './dtos/AddComment.dto';
-import { paginate } from 'nestjs-typeorm-paginate';
+import { Pagination, paginate } from 'nestjs-typeorm-paginate';
 import { ReportPostDto } from './dtos/ReportPost.dto';
 import { ReportPost } from 'src/database/ReportPost.entity';
 import { SavedPostEntity } from 'src/database/SavedPost.entity';
@@ -419,5 +419,16 @@ export class PostService {
     //   .orderBy('userPost.createdAt', 'DESC')
     //   .getMany();
     return { posts };
+  }
+
+  async getReportedPost(payload: { page: number; limit: number }) {
+    const res = this.reportPostRepository.createQueryBuilder('report');
+
+    return paginate<ReportPost>(res, payload);
+  }
+
+  async deleteReportedPost(id: number) {
+    await this.userPostRepository.delete({ id });
+    return this.reportPostRepository.delete({ post: { id } });
   }
 }
