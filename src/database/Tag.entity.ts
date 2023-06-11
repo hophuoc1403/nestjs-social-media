@@ -11,4 +11,7 @@ export class TagEntity {
 
   @OneToMany(() => PostTagEntity, (postTag) => postTag.tag)
   postTag: PostTagEntity[];
+
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  createdAt: Date;
 }

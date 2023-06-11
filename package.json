@@ -30,6 +30,7 @@
     "@nestjs/websockets": "^9.4.1",
     "bcrypt": "^5.1.0",
     "crypto": "^1.0.1",
+    "google-auth-library": "^8.8.0",
     "googleapis": "^118.0.0",
     "multer": "^1.4.5-lts.1",
     "nestjs-typeorm-paginate": "^4.0.3",

@@ -24,9 +24,7 @@ export class NotificationGateway implements OnModuleInit {
   ) {}
 
   onModuleInit() {
-    this.server.on('connection', (socket) => {
-      console.log(socket.id);
-    });
+    this.server.on('connection', (socket) => {});
   }
 
   @SubscribeMessage('sendNotification')
@@ -43,15 +41,6 @@ export class NotificationGateway implements OnModuleInit {
   ) {
     const { senderId, senderName, receiverName, receiverId, type, postId } =
       data;
-
-    await this.notificationRepository.save({
-      message: `${type} ${receiverName}'s post`,
-      senderName,
-      type: type,
-      post: { id: postId },
-      user: { id: senderId },
-      receiver: { id: receiverId },
-    });
     socket.emit('getNotification', {
       senderId,
       senderName,
@@ -59,6 +48,15 @@ export class NotificationGateway implements OnModuleInit {
       type,
       message: `${type} your post`,
       receiverId,
+    });
+
+    await this.notificationRepository.save({
+      message: `${type} your post`,
+      senderName,
+      type: type,
+      post: { id: postId },
+      user: { id: senderId },
+      receiver: { id: receiverId },
     });
   }
 }

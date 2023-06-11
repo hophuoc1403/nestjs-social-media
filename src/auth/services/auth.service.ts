@@ -49,7 +49,7 @@ export class AuthService {
       relations: ['friends'],
     });
     if (!user) {
-      return HttpStatus.BAD_REQUEST;
+      throw new HttpException('user not exist', HttpStatus.BAD_REQUEST);
     }
     const isSamePassword = await bcrypt.compare(password, user.password);
     if (!isSamePassword) {
@@ -59,7 +59,7 @@ export class AuthService {
     return {
       access_token: this.jwtService.sign(payload, {
         secret: jwtConstants.secret,
-        expiresIn: '20m',
+        expiresIn: '60m',
       }),
       refresh_token: this.jwtService.sign(payload, {
         secret: jwtConstants.refresh,
@@ -160,5 +160,36 @@ export class AuthService {
       { password: hashedPassword },
     );
     return { message: 'reset password success !' };
+  }
+
+  async signInWithGoogle(userInfo: any, req: any) {
+    let user = await this.userRepository.findOne({
+      where: { email: userInfo.email },
+    });
+    if (user) {
+      req.user = user;
+    } else {
+      await this.userRepository.save({
+        email: userInfo.email,
+        firstName: userInfo.given_name,
+        lastName: userInfo.family_name,
+      });
+      user = await this.userRepository.findOne({
+        where: { email: userInfo.email },
+      });
+    }
+
+    const { password: userPassword, ...payload } = user;
+    return {
+      access_token: this.jwtService.sign(payload, {
+        secret: jwtConstants.secret,
+        expiresIn: '60m',
+      }),
+      refresh_token: this.jwtService.sign(payload, {
+        secret: jwtConstants.refresh,
+        expiresIn: '3d',
+      }),
+      user,
+    };
   }
 }

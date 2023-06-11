@@ -10,7 +10,9 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from 'src/strategy/login.strategy';
 
+@UseGuards(AuthGuard)
 @UseGuards(AdminGuard)
 @Controller('manage-accounts')
 export class ManageAccountController {

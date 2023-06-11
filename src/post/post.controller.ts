@@ -167,17 +167,8 @@ export class PostController {
     return this.postService.getPostDetail(postId);
   }
 
-  @Get(':id')
-  async getUserPost(
-    @Param('id', ParseIntPipe) userId: number,
-    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page = 1,
-    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit = 5,
-  ) {
-    return this.postService.getUserPost(userId, { limit, page });
-  }
-
-  @UseGuards(AdminGuard)
-  @Get('/reported-post/get')
+  // @UseGuards(AdminGuard)
+  @Get('reported-post/get')
   async getReportedPost(
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit = 5,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page = 1,
@@ -188,6 +179,29 @@ export class PostController {
   @UseGuards(AdminGuard)
   @Delete('reported-post/:id')
   async deleteReportedPost(@Param('id', ParseIntPipe) id: number) {
+    console.log('ádsadkjsa');
     return this.postService.deleteReportedPost(id);
+  }
+
+  @Get('saved-post/:id')
+  async getSavedPost(@Param('id', ParseIntPipe) id: any) {
+    return this.postService.getSavedPost(id);
+  }
+
+  @Post('saved-post')
+  async savePost(@Body() savedPostInfo: any) {
+    return this.postService.savePost(
+      savedPostInfo.postId,
+      savedPostInfo.userId,
+    );
+  }
+
+  @Get(':id')
+  async getUserPost(
+    @Param('id', ParseIntPipe) userId: number,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page = 1,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit = 5,
+  ) {
+    return this.postService.getUserPost(userId, { limit, page });
   }
 }

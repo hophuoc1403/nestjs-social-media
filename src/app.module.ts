@@ -64,6 +64,20 @@ import { TagsModule } from './tags/tags.module';
       storage,
       fileFilter,
     }),
+    UserEntity,
+    PostEntity,
+    UserPostEntity,
+    SavedPostEntity,
+    CommentEntity,
+    LikeEntity,
+    TagEntity,
+    PostTagEntity,
+    UserFriendEntity,
+    RoomChatEntity,
+    ChatEntity,
+    NotificationEntity,
+    StoryEntity,
+    ReportPost,
     AuthModule,
     UserModule,
     PostModule,
@@ -83,10 +97,10 @@ import { TagsModule } from './tags/tags.module';
   controllers: [AppController],
   providers: [
     AppService,
-    {
-      provide: APP_FILTER,
-      useClass: AllExceptionsFilter,
-    },
+    // {
+    //   provide: APP_FILTER,
+    //   useClass: AllExceptionsFilter,
+    // },
   ],
 })
 export class AppModule {}

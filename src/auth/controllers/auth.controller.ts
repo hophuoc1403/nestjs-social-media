@@ -20,6 +20,12 @@ import { fileFilter, storage } from '../../config/multer.config';
 import { SignInDto } from '../dtos/signIn.dto';
 import { ResetAccountDto, VerifyAccountDto } from '../dtos/verifyAccount.dto';
 import { log } from 'console';
+import { OAuth2Client } from 'google-auth-library';
+
+const client = new OAuth2Client(
+  process.env.CLIENT_ID,
+  process.env.CLIENT_SECRET,
+);
 
 @Controller('auth')
 export class AuthController {
@@ -73,5 +79,15 @@ export class AuthController {
     const message = exception.message;
 
     response.status(status).json({ message });
+  }
+
+  @Post('signin-with-sso')
+  async signinWithSSO(@Body('token') token: string, @Req() req) {
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: process.env.CLIENT_ID,
+    });
+    console.log(ticket.getPayload());
+    return this.authService.signInWithGoogle(ticket.getPayload(), req);
   }
 }

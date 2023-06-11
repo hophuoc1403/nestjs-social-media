@@ -19,4 +19,8 @@ export class TagsService {
   async addTags(name: string) {
     return this.tagRepository.save({ name });
   }
+
+  async updateTag(id: number, name: string) {
+    return this.tagRepository.update({ id }, { name });
+  }
 }

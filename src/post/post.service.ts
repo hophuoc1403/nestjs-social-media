@@ -76,6 +76,7 @@ export class PostService {
       .leftJoinAndSelect('likes.post', 'likePost')
       .leftJoin('userPost.comments', 'comments')
       .leftJoinAndSelect('userPost.userRoot', 'userRoot')
+      .leftJoinAndSelect('userPost.savedPost', 'savedPost')
       .loadRelationCountAndMap('userPost.commentCount', 'userPost.comments')
       .orderBy('userPost.createdAt', 'DESC')
       .getMany();
@@ -156,6 +157,7 @@ export class PostService {
     if (postInfo.picturePath) {
       if (currentPost.picturePath) {
         await fs.promises.unlink(`uploads/${currentPost.picturePath}`);
+        await this.postRepository.update({ id }, { picturePath: '' });
       }
     }
     if (pictureDelete) {
@@ -299,12 +301,14 @@ export class PostService {
     comment: AddCommentDto;
     userId: number;
   }) {
+    console.log({ newComment: this.commentRepository });
     const newComment = await this.commentRepository.save({
       post: { id: comment.postId },
-      parentCommentId: comment.parentCommentId ? comment.parentCommentId : null,
+      // parentCommentId: comment.parentCommentId ? comment.parentCommentId : null,
       user: { id: userId },
       content: comment.content,
     });
+    console.log({ newComment });
 
     const returnedComment = await this.commentRepository.findOne({
       where: { id: newComment.id },
@@ -422,13 +426,40 @@ export class PostService {
   }
 
   async getReportedPost(payload: { page: number; limit: number }) {
-    const res = this.reportPostRepository.createQueryBuilder('report');
+    const res = this.reportPostRepository.createQueryBuilder('post');
+
+    await res
+      .leftJoinAndSelect('post.user', 'user')
+      .leftJoinAndSelect('post.post', 'posts')
+      .getMany();
 
     return paginate<ReportPost>(res, payload);
   }
 
   async deleteReportedPost(id: number) {
     await this.userPostRepository.delete({ id });
-    return this.reportPostRepository.delete({ post: { id } });
+    const res = await this.reportPostRepository.delete({ post: { id } });
+    return res;
+  }
+
+  async savePost(postId: number, userId: number) {
+    const isExistPost = await this.savedPostRepository.findOne({
+      where: { user: { id: userId }, userPost: { id: postId } },
+    });
+    if (isExistPost) {
+      return;
+    }
+    return await this.savedPostRepository.save({
+      user: { id: userId },
+      userPost: { id: postId },
+    });
+  }
+
+  async getSavedPost(userId: number) {
+    console.log(userId);
+    return this.savedPostRepository.find({
+      where: { user: { id: userId } },
+      relations: ['user', 'userPost'],
+    });
   }
 }

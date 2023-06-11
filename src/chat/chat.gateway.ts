@@ -41,7 +41,7 @@ export class ChatGateWay implements OnModuleInit {
     data: { senderId: number; message: string; roomId: number },
   ) {
     const { senderId, roomId, message } = data;
-
+    console.log('sendings');
     const createdAt = new Date().toString();
     socket.join(roomId.toString());
     this.server
